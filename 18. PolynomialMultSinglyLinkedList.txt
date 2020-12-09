@@ -1,0 +1,101 @@
+//Multiplication of two polynomials in one variable using singly linked list
+#include<stdio.h>
+#include<stdlib.h>
+struct node
+{
+    int coeff;
+    int expo;
+    struct node* link;
+}*begA = NULL, *begB = NULL, *begM = NULL, *newnode = NULL, *loc = NULL;
+void insertNode(int c, int e, struct node **beg)
+{
+    newnode = malloc(sizeof(struct node));
+    newnode->coeff = c;
+    newnode->expo = e;
+    newnode->link = NULL;
+    if(*beg == NULL)
+        *beg = newnode;
+    else
+    {
+        loc = *beg;
+        while(loc->link != NULL)
+            loc = loc->link;
+        loc->link = newnode;
+    }
+}
+void display(struct node* loc)
+{
+    printf("%dx^%d",loc->coeff,loc->expo); 
+    while(loc->link!=NULL)
+    {
+        loc = loc->link;
+        printf(" + %dx^%d",loc->coeff,loc->expo);
+    }
+}
+void polynomialMultiplication()
+{   int c,e;
+    struct node *locA = begA, *locB = begB;
+    while(locA!=NULL)
+    {
+        while(locB!=NULL)
+        {
+            c = locA->coeff*locB->coeff;
+            e = locA->expo + locB->expo;
+            insertNode(c,e,&begM);
+            locB = locB->link;
+        }
+        locA = locA->link;
+        locB = begB;
+    }
+    //adding same coefficients
+    loc = begM;
+    struct node *temp = NULL, *prev = NULL;
+    while(loc!=NULL)
+    {
+        temp = loc->link;
+        prev = loc;
+        while(temp!=NULL)
+        {
+            if(loc->expo == temp->expo)
+            {
+                loc->coeff = loc->coeff + temp->coeff; 
+                prev->link = temp->link; //deleting extra node
+                temp = temp->link;
+            }
+            else
+            {
+                prev = temp;
+                temp = temp->link;
+            }
+        }
+        loc = loc->link;
+    }
+    printf("\n\nThe Polynomial formed after Multiplication is : \n");
+    display(begM);
+}
+int main()
+{
+    int a,b,i,j,c,e;    //a,b are sizes of polynomials A,B
+    printf("\nTerms of Polynomial must be in decreasing order \nof exponents and exclude terms with coefficient 0");
+    printf("\nEnter the number of terms of first Polynomial(A): ");
+    scanf("%d",&a);
+    for(i=0;i<a;i++)
+    {
+        printf("\nEnter coefficient and exponent of term %d respectively :\n",i+1);
+        scanf("%d %d",&c,&e);
+        insertNode(c,e,&begA);
+    }
+    printf("The first Polynomial is : \n");
+    display(begA);
+    printf("\n\nEnter the number of terms of second Polynomial(B): ");
+    scanf("%d",&b);
+    for(j=0;j<b;j++)
+    {
+        printf("\nEnter coefficient and exponent of term %d respectively :\n",j+1);
+        scanf("%d %d",&c,&e);
+        insertNode(c,e,&begB);    
+    }
+    printf("The second Polynomial is : \n");
+    display(begB);
+    polynomialMultiplication();  
+}
