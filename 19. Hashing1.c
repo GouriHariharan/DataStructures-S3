@@ -6,35 +6,37 @@ the division method and the collision resolution technique as linear probing.*/
 int hash[13];
 void display()
 {
-    printf("\nThe Hash Table contains :");
+    printf("\nThe Hash Table contains :\n");
     for(int i = 0; i<N; i++)
     {
         if(hash[i]!=0)
-            printf("\n%d at index %d",hash[i],i);
+            printf(" %d at index %d,",hash[i],i);
+        else
+        printf(" _,");
     }
 }
-void linearProbe(int key, int el)   
+void linearProbe(int keyVal, int el)   
 {   
-    int k = key;
+    int k = keyVal;
     do
     {
-        key = (key+1)%N;    //collision resolution
-        if(hash[key] == 0)
+        keyVal = (keyVal+1)%N;    //collision resolution
+        if(hash[keyVal] == 0)
         {
-            hash[key] = el;
+            hash[keyVal] = el;
             return;
         }
-    }while(key!=k); //probed all 13 positions
+    }while(keyVal!=k); //probed all 13 positions
 }
-void generateKey(int el)
+void generateKeyVal(int el)
 {
-    int key = el%N;
-    if(hash[key]==0)
+    int keyVal = el%N;
+    if(hash[keyVal]==0)
     {
-        hash[key] = el;    
+        hash[keyVal] = el;    
     }
     else            //collision case
-        linearProbe(key,el);
+        linearProbe(keyVal,el);
 }
 int main()
 {   
@@ -52,7 +54,7 @@ int main()
         }
         printf("\nEnter the element to be stored in the hash table:\n");
         scanf("%d",&el);
-        generateKey(el);
+        generateKeyVal(el);
         printf("\nDo you want to continue storing elements?(y/n)");
         scanf(" %c",&c);
         if(c == 'n')
